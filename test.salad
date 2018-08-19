@@ -1,0 +1,41 @@
+{
+    "class": "CommandLineTool",
+    "cwlVersion": "v1.0",
+    "inputs": [
+        {
+            "id": "file:///heterodon/test.cwl#b",
+            "type": "string",
+            "inputBinding": {
+                "position": 4
+            }
+        },
+        {
+            "id": "file:///heterodon/test.cwl#c",
+            "type": "string",
+            "inputBinding": {
+                "position": 5
+            }
+        },
+        {
+            "id": "file:///heterodon/test.cwl#a",
+            "type": "string",
+            "inputBinding": {
+                "position": 1
+            }
+        }
+    ],
+    "baseCommand": "echo",
+    "arguments": [
+        "arg0",
+        {
+            "valueFrom": "arg2",
+            "position": 3
+        },
+        {
+            "valueFrom": "arg1",
+            "position": 2
+        }
+    ],
+    "outputs": [],
+    "id": "file:///heterodon/test.cwl"
+}
