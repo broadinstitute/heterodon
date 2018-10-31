@@ -39,37 +39,51 @@ apt-get install -y zip
 # https://github.com/Deconimus/JarShrink (aka `jdep`)
 # https://github.com/zenglian/minimize-jar (aka `java -verbose:class`)
 # Note ICU is huge, but (parts are) required: http://bugs.jython.org/issue2175
-extraneous_dirs=( \
-    "Lib/distutils/tests" \
-    "Lib/email/test" \
-    "Lib/ensurepip" \
-    "Lib/isodate/tests" \
-    "Lib/jars" \
-    "Lib/json/tests" \
-    "Lib/lib2to3/tests" \
-    "Lib/pip" \
-    "Lib/prov/tests" \
-    "Lib/schema_salad/tests" \
-    "Lib/share/doc" \
-    "Lib/setuptools-*-info" \
-    "Lib/test" \
-    "Lib/unittest" \
-    "javatests" \
-    "jni" \
-    "org/bouncycastle/util/test" \
-    "org/python/bouncycastle" \
-    "org/python/tests" \
+# Note BouncyCastle bindings and jni ffi are required for HTTPS/SSL/TLS.
+# However, only the Darwin and Linux ffi libs are not removed.
+# Remove windows executables
+# Remove '*.class' files. May slow down jython on its first run. But we don't want to copy around the cache.
+
+extraneous_file_patterns=( \
+    "*.exe" \
+    "Lib/*.class" \
+    "Lib/distutils/tests/*" \
+    "Lib/email/test/*" \
+    "Lib/ensurepip/*" \
+    "Lib/isodate/tests/*" \
+    "Lib/jars/*" \
+    "Lib/json/tests/*" \
+    "Lib/lib2to3/tests/*" \
+    "Lib/pip/*" \
+    "Lib/prov/tests/*" \
+    "Lib/schema_salad/tests/*" \
+    "Lib/share/doc/*" \
+    "Lib/setuptools-*-info/*" \
+    "Lib/test/*" \
+    "Lib/unittest/*" \
+    "javatests/*" \
+    "jni/aarch64-Linux/*" \
+    "jni/arm-Linux/*" \
+    "jni/i386-SunOS/*" \
+    "jni/i386-Windows/*" \
+    "jni/ppc-AIX/*" \
+    "jni/ppc64-Linux/*" \
+    "jni/ppc64le-Linux/*" \
+    "jni/sparcv9-SunOS/*" \
+    "jni/x86_64-FreeBSD/*" \
+    "jni/x86_64-OpenBSD/*" \
+    "jni/x86_64-SunOS/*" \
+    "jni/x86_64-Windows/*" \
+    "org/bouncycastle/util/test/*" \
+    "org/python/tests/*" \
 )
 
-for extraneous_dir in "${extraneous_dirs[@]}"; do zip -q -d ${heterodon_jar} "$(printf "%s/*" ${extraneous_dir})"; done
-
-# Remove windows executables
-zip -q -d ${heterodon_jar} '*.exe'
-
-# Remove '*.class' files. May slow down jython on its first run. But we don't want to copy around the cache.
-zip -q -d ${heterodon_jar} 'Lib/*.class'
+for extraneous_file_pattern in "${extraneous_file_patterns[@]}"; do
+    zip -q -d "${heterodon_jar}" "${extraneous_file_pattern}"
+done
 
 # Test that the jar works at compilation and runtime
 heterodon_classpath=.:${heterodon_jar}
 javac -cp ${heterodon_classpath} SaladFileTest.java
 diff -w test.salad <(java -cp ${heterodon_classpath} SaladFileTest test.cwl)
+diff -w https.salad <(java -cp ${heterodon_classpath} SaladFileTest 'https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl')

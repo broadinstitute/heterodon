@@ -1,0 +1,24 @@
+[
+    {
+        "id": "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl#relative_imports",
+        "class": "Workflow",
+        "inputs": [],
+        "outputs": [
+            {
+                "type": "string",
+                "outputSource": "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl#relative_imports/globSort/letters",
+                "id": "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl#relative_imports/letters"
+            }
+        ],
+        "steps": [
+            {
+                "in": [],
+                "run": "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/cwl_glob_sort.cwl",
+                "out": [
+                    "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl#relative_imports/globSort/letters"
+                ],
+                "id": "https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl#relative_imports/globSort"
+            }
+        ]
+    }
+]
