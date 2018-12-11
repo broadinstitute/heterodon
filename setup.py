@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 # Tired of trying to get SemVer working with setuptools. Ignoring the warning for now, but it means the pre-release
 # versions are getting mangled. Comments didn't seem to help from https://github.com/pypa/setuptools/issues/308
-heterodon_version = "1.0.0-beta2"
+heterodon_version = "1.0.0-beta3"
 cwltool_version = "1.0.20180809224403"
 
 setup(

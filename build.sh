@@ -2,6 +2,7 @@
 
 set -e
 
+# Note: When next version of Jython is released, please remove the patch for the zlib issue below!
 JYTHON_VERSION="2.7.1"
 
 # Download jython
@@ -82,8 +83,14 @@ for extraneous_file_pattern in "${extraneous_file_patterns[@]}"; do
     zip -q -d "${heterodon_jar}" "${extraneous_file_pattern}"
 done
 
+# Patch the zlib issue fixed in https://github.com/jythontools/jython/pull/111
+mkdir -p Lib
+curl https://raw.githubusercontent.com/jythontools/jython/899879e/Lib/zlib.py > Lib/zlib.py
+zip "${heterodon_jar}" Lib/zlib.py
+
 # Test that the jar works at compilation and runtime
 heterodon_classpath=.:${heterodon_jar}
 javac -cp ${heterodon_classpath} SaladFileTest.java
 diff -w test.salad <(java -cp ${heterodon_classpath} SaladFileTest test.cwl)
 diff -w https.salad <(java -cp ${heterodon_classpath} SaladFileTest 'https://raw.githubusercontent.com/broadinstitute/cromwell/3262e87/centaur/src/main/resources/standardTestCases/cwl_relative_imports/workflow.cwl')
+diff -w zlib_issue.salad <(java -cp ${heterodon_classpath} SaladFileTest 'https://raw.githubusercontent.com/bcbio/test_bcbio_cwl/5d37c21/prealign/prealign-workflow/steps/postprocess_alignment_to_rec.cwl')
